@@ -1,7 +1,6 @@
 import { Controller, Request, Post, UseGuards, Get } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { Roles } from 'src/common/roles/roles.decorator';
 
 @Controller()
 export class AuthController {
@@ -15,7 +14,6 @@ export class AuthController {
     
     @UseGuards(AuthGuard('jwt'))
     @Get('profile')
-    // @Roles('superAdmin')
     getProfile(@Request() req) {
         return req.user;
     }
