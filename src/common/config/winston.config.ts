@@ -17,14 +17,14 @@ const transport = new winston.transports.DailyRotateFile({
 
 export class WinstonConfig implements LoggerOptions {
     format = winston.format.combine(
-        winston.format.colorize({
-            colors: {
-                info: 'green',
-                warn: 'yellow',
-                debug: 'blue',
-                error: 'red'
-            }
-        }),
+        // winston.format.colorize({
+        //     colors: {
+        //         info: 'green',
+        //         warn: 'yellow',
+        //         debug: 'blue',
+        //         error: 'red'
+        //     }
+        // }),
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         winston.format.printf(info => {
             if (info.stack) {
@@ -33,7 +33,6 @@ export class WinstonConfig implements LoggerOptions {
             if (info.trace) {
                 info.message = info.trace
             }
-            
             return `[${info.pid}] ${info.timestamp} ${info.level}: [${info.context || 'Application'}] ${info.message}`
         })
     );

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CatsModule } from './cats/cats.module'; 
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import { CatsModule } from './modules/cats/cats.module'; 
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WinstonModule } from 'nest-winston';
 import { WinstonConfig } from './common/config/winston.config';
