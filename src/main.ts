@@ -2,10 +2,8 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { LoggingInterceptor } from './interceptor/logger.interceptor';
 import { AllExceptionsFilter } from './filter/all-exception.filter';
-import { loggers } from 'winston';
-import { WinstonModule } from 'nest-winston';
-import { WinstonConfig } from './common/config/winston.config';
 import { TransformInterceptor } from './interceptor/transform.interceptor';
+import { ErrorInterceptor } from './interceptor/error.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule,{ logger: false });
@@ -14,8 +12,9 @@ async function bootstrap() {
   app.useLogger(nestWinston);
   //添加拦截器
   app.useGlobalInterceptors(
-    new TransformInterceptor(new Reflector()),
-    new LoggingInterceptor(nestWinston.logger)
+    new TransformInterceptor(new Reflector(),nestWinston.logger),
+    new ErrorInterceptor(new Reflector()),
+    // new LoggingInterceptor(nestWinston.logger)
   )
   //添加异常过滤器
   app.useGlobalFilters(

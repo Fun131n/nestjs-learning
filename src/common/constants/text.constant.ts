@@ -1,2 +1,11 @@
-export const HTTP_DEFAULT_ERROR_TEXT = '数据请求失败'
-export const HTTP_DEFAULT_SUCCESS_TEXT ='数据请求成功'
+/**
+ * Text constant.
+ * @file 文案常量
+ * @description 用于全局路由请求的响应文案
+ */
+
+export const HTTP_ERROR_SUFFIX = '失败';
+export const HTTP_SUCCESS_SUFFIX = '成功';
+export const HTTP_DEFAULT_TEXT = '数据请求';
+export const HTTP_DEFAULT_ERROR_TEXT = HTTP_DEFAULT_TEXT + HTTP_ERROR_SUFFIX;
+export const HTTP_DEFAULT_SUCCESS_TEXT = HTTP_DEFAULT_TEXT + HTTP_SUCCESS_SUFFIX;

@@ -2,12 +2,14 @@ import { Controller, Post, Body, Get, Param, Delete, Query } from "@nestjs/commo
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { User } from "./user.entity";
+import { HttpProcessor } from "src/decorators/http.decorator";
 
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
     
     @Post()
+    @HttpProcessor.handle('创建用户')
     create(@Body() createUserDto: CreateUserDto): Promise<User> {
         return this.usersService.create(createUserDto);
     }
