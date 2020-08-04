@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext, UseGuards } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UseGuards,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()

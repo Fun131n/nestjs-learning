@@ -4,7 +4,7 @@
  */
 
 import { Module } from '@nestjs/common';
-import { CatsModule } from './modules/cats/cats.module'; 
+import { CatsModule } from './modules/cats/cats.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -20,12 +20,11 @@ import { PG_DATABASE } from './app.config';
   //   },
   // ],
   imports: [
-    // CatsModule, 
-    AuthModule, 
+    // CatsModule,
+    AuthModule,
     UsersModule,
     TypeOrmModule.forRoot(PG_DATABASE),
     WinstonModule.forRoot(new WinstonConfig()),
-  ]
+  ],
 })
-
 export class AppModule {}
