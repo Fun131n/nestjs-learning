@@ -50,13 +50,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
       debug: isDevMode ? exception.stack : null,
     };
     if (status === HttpStatus.NOT_FOUND) {
-      data.error = `资源不存在`;
-      data.message = `接口 ${request.method} -> ${request.url} 无效`;
+      data.message = `资源不存在`;
+      data.error = `接口 ${request.method} -> ${request.url} 无效`;
     }
     const errorLog =
       '\n收到请求：' +
       request.method +
-      '->' +
+      ' -> ' +
       request.url +
       '\n请求参数：' +
       JSON.stringify(body) +

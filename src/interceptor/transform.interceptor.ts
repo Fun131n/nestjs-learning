@@ -21,7 +21,6 @@ import { map } from 'rxjs/operators';
 import * as TEXT from '../common/constants/text.constant';
 import * as META from '../common/constants/meta.constant';
 import { Logger } from 'winston';
-import { response } from 'express';
 
 /**
  * @class TransformInterceptor
@@ -54,7 +53,7 @@ export class TransformInterceptor<T>
     const now = Date.now();
     return call$.pipe(
       map((data: any) => {
-        const result = isPagination ? transformDataToPaginate<T>(data) : data;
+        const result = isPagination ? transformDataToPaginate<T>(data) : data || null;
         const transformResult = {
           statusCode: EHttpStatus.Success,
           message,

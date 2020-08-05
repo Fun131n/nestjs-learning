@@ -16,15 +16,17 @@ export async function paginate<Entity>(
   entityClass: ObjectType<Entity>,
   query: PaginateOptions,
 ): Promise<PaginateResult<Entity>> {
+  const limit = query.limit || 20;
+  const skip = query.skip || 0;
   const data = await getRepository(entityClass)
     .createQueryBuilder()
-    .take(query.limit)
-    .skip(query.limit * query.skip)
+    .take(limit)
+    .skip(limit * skip)
     .getManyAndCount();
   return {
     arr: data[0],
     total: data[1],
-    limit: Math.floor(query.limit),
-    page: query.skip / query.limit,
+    limit: Math.floor(limit),
+    page: skip / limit,
   };
 }

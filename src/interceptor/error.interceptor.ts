@@ -9,6 +9,7 @@ import {
   ExecutionContext,
   CallHandler,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable, throwError } from 'rxjs';
@@ -39,9 +40,15 @@ export class ErrorInterceptor implements NestInterceptor {
     const message =
       this.reflector.get<TMessage>(META.HTTP_ERROR_MESSAGE, target) ||
       TEXT.HTTP_DEFAULT_ERROR_TEXT;
+    let HttpStatus;
     return call$.pipe(
-      catchError((error) =>
-        throwError(new CustomError({ message, error }, statusCode)),
+      catchError((error) => {
+        //如果为标准http错误，返回标准http错误码，不返回500
+        if (error instanceof HttpException) {
+          HttpStatus = error.getStatus()
+        }
+        return throwError(new CustomError({ message, error}, statusCode || HttpStatus))
+        }
       ),
     );
   }
