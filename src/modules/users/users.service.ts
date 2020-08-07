@@ -8,6 +8,7 @@ import {
   paginate,
   PaginateOptions,
 } from 'src/interfaces/paginate.interface';
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UsersService {
@@ -16,10 +17,11 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const user = new User();
-    user.firstName = createUserDto.firstName;
-    user.lastName = createUserDto.lastName;
+    user.nickname = createUserDto.nickname;
+    user.account = createUserDto.account;
+    user.password = await bcrypt.hash(createUserDto.password, 10)
     return this.usersRepository.save(user);
   }
 
@@ -31,12 +33,19 @@ export class UsersService {
     return paginate(User, query);
   }
 
-  findOne(username: string): Promise<User> {
+  findOne(nickname: string): Promise<User> {
     return this.usersRepository.findOne({
       where: {
-        username,
+        nickname,
       },
     });
+  }
+
+  findOneWithPassword(account: string): Promise<User> {
+    return this.usersRepository.createQueryBuilder('user')
+      .where('user.account = :account', { account })
+      .addSelect('user.password')
+      .getOne()
   }
 
   async remove(id: string): Promise<void> {

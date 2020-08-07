@@ -1,3 +1,6 @@
+/**
+ * 分页数据接口
+ */
 import { getRepository, ObjectType } from 'typeorm';
 
 export interface PaginateResult<T> {

@@ -13,7 +13,8 @@ export class ValidationPipe implements PipeTransform<any> {
     const object = plainToClass(metatype, value);
     const errors = await validate(object);
     if (errors.length > 0) {
-      throw new ValidationError('请求参数错误');
+      const errorMessage = errors.map(error => Object.values(error.constraints).join(';')).join(';');
+      throw new ValidationError(errorMessage);
     }
     return value;
   }

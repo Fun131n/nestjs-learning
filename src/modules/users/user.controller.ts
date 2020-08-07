@@ -34,9 +34,9 @@ export class UsersController {
     return this.usersService.findUsePage(query);
   }
 
-  @Get(':username')
-  findOne(@Param('username') username: string): Promise<User> {
-    return this.usersService.findOne(username);
+  @Get(':nickname')
+  findOne(@Param('nickname') nickname: string): Promise<User> {
+    return this.usersService.findOne(nickname);
   }
 
   @Delete(':id')

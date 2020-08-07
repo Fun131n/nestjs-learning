@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import {
   THttpSuccessResponse,
-  THttpErrorResponse,
   TMessage,
   EHttpStatus,
   IHttpResultPaginate,
