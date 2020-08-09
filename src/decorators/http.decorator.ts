@@ -4,7 +4,7 @@
  */
 
 import { HttpStatus, SetMetadata } from '@nestjs/common';
-import { TMessage } from 'src/interfaces/http.interface';
+import { TMessage } from '@app/interfaces/http.interface';
 import * as META from '../common/constants/meta.constant';
 import * as TEXT from '../common/constants/text.constant';
 

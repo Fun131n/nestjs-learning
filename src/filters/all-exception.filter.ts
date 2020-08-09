@@ -16,8 +16,8 @@ import {
   TMessage,
   THttpErrorResponse,
   EHttpStatus,
-} from 'src/interfaces/http.interface';
-import { isDevMode } from 'src/app.environment';
+} from '@app/interfaces/http.interface';
+import { isDevMode } from '@app/app.environment';
 
 /**
  * @class AllExceptionsFilter

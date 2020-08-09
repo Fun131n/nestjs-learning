@@ -15,9 +15,9 @@ import { Reflector } from '@nestjs/core';
 import { Observable, throwError } from 'rxjs';
 import * as TEXT from '../common/constants/text.constant';
 import * as META from '../common/constants/meta.constant';
-import { TMessage } from 'src/interfaces/http.interface';
+import { TMessage } from '@app/interfaces/http.interface';
 import { catchError } from 'rxjs/operators';
-import { CustomError } from 'src/common/error/custom.error';
+import { CustomError } from '@app/common/error/custom.error';
 
 /**
  * @class Error Interceptor

@@ -14,6 +14,7 @@ import {
   EHttpStatus,
   IHttpResultPaginate,
 } from '../interfaces/http.interface';
+import { PaginateResult } from 'mongoose';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -71,15 +72,15 @@ export class TransformInterceptor<T>
 
 // 分页数据转标准数据
 export function transformDataToPaginate<T>(
-  data: any,
+  data: PaginateResult<T>,
 ): IHttpResultPaginate<T[]> {
   return {
-    data: data.arr,
+    data: data.docs,
     pagination: {
       total: data.total,
       page: data.page,
-      // total_page: data.pages,
       limit: data.limit,
+      // total_page: data.pages,
     },
   };
 }

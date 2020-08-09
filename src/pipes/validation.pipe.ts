@@ -1,7 +1,7 @@
 import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
-import { ValidationError } from 'src/common/error/validation.error';
+import { ValidationError } from '@app/common/error/validation.error';
 import * as TEXT from '../common/constants/text.constant';
 
 @Injectable()

@@ -15,3 +15,9 @@ export const PG_DATABASE = {
   autoLoadEntities: true,
   synchronize: true,
 } as TypeOrmModuleOptions;
+
+
+export const MONGODB = {
+  uri: 'mongodb://127.0.0.1:27017/nest',
+  LIMIT: 20
+}
