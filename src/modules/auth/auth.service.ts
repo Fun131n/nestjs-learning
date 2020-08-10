@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt'
 import { Auth } from './auth.model';
 import { InjectModel } from '@app/transformers/model.transformer';
 import { MongooseModel } from '@app/interfaces/mongoose.interface';
+import { encodeBcrypt } from '@app/transformers/decode.transformer';
 
 @Injectable()
 export class AuthService {
@@ -30,6 +30,12 @@ export class AuthService {
   // }
 
   async create(auth: Auth): Promise<Auth> {
-    return this.authModel.create(auth);
+    auth.password = encodeBcrypt(auth.password)
+    const action = this.authModel.create(auth);
+    return action.then(data => {
+      data = data.toObject();
+      Reflect.deleteProperty(data, 'password');
+      return data;
+    });
   }
 }

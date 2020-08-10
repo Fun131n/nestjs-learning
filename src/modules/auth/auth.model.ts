@@ -15,9 +15,10 @@ export class Auth {
   @IsDefined()
   @prop({ default: '' })
   account: string;
-
+  
+  @IsDefined()
   @prop()
-  password: string;
+  password?: string;
 
 }
 
