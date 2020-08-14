@@ -46,8 +46,9 @@ export class ErrorInterceptor implements NestInterceptor {
         //如果为标准http错误，返回标准http错误码，不返回500
         if (error instanceof HttpException) {
           HttpStatus = error.getStatus()
+          error = error.getResponse();
         }
-        return throwError(new CustomError({ message, error}, statusCode || HttpStatus))
+        return throwError(new CustomError(error, statusCode || HttpStatus))
         }
       ),
     );

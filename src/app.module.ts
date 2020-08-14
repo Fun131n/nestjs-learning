@@ -14,9 +14,7 @@ import { DatabaseModule } from './processors/database/database.module';
 
   imports: [
     WinstonModule.forRoot(new WinstonConfig()),
-    
     DatabaseModule,
-    
     AuthModule
   ],
 })

@@ -4,26 +4,29 @@
 
 import { getProviderByTypegooseClass } from "@app/transformers/model.transformer";
 import { prop } from "@typegoose/typegoose";
-import { IsDefined } from "class-validator";
+import { IsNotEmpty } from "class-validator";
 
 export class Auth {
 
-  @IsDefined()
+  @IsNotEmpty({message: '请填写昵称'})
   @prop({ default: '' })
   nickname: string
 
-  @IsDefined()
+  @IsNotEmpty({message: '请填写账号'})
   @prop({ default: '' })
-  account: string;
+  username: string;
   
-  @IsDefined()
+  @IsNotEmpty({message: '请填写密码'})
   @prop()
   password?: string;
 
 }
 
 export class Login {
-  @IsDefined()
+  @IsNotEmpty({message: '请填写账号'})
+  username: string;
+
+  @IsNotEmpty({message: '请填写密码'})
   password: string;
 }
 

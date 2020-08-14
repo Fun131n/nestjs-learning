@@ -1,6 +1,6 @@
 /**
  * Custom error.
- * @file 错误定制器
+ * @file 自定义错误定制器
  */
 
 import { HttpException, HttpStatus } from '@nestjs/common';

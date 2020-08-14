@@ -17,7 +17,7 @@ _mongooseAutoIncrement.initialize(_mongoose.connection);
 
 // 插件配置初始化
 (_mongoosePaginate as any).paginate.options = {
-  limit: APP_CONFIG.MONGODB.LIMIT,
+  limit: APP_CONFIG.APP.PAGINATE_LIMIT,
 };
 
 export const mongoose = _mongoose;
