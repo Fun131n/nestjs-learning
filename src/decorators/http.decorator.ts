@@ -4,7 +4,6 @@
  */
 
 import { HttpStatus, SetMetadata } from '@nestjs/common';
-import { TMessage } from '@app/interfaces/http.interface';
 import * as META from '../common/constants/meta.constant';
 import * as TEXT from '../common/constants/text.constant';
 
@@ -12,8 +11,8 @@ import * as TEXT from '../common/constants/text.constant';
 interface IBuildDecoratorOption {
   errorCode?: HttpStatus;
   successCode?: HttpStatus;
-  errorMessage?: TMessage;
-  successMessage?: TMessage;
+  errorMessage?: string;
+  successMessage?: string;
   isPagination?: boolean;
 }
 
@@ -21,11 +20,11 @@ interface IBuildDecoratorOption {
 interface IHandleOption {
   error?: HttpStatus;
   success?: HttpStatus;
-  message: TMessage;
+  message: string;
   isPagination?: boolean;
 }
 
-type THandleOption = TMessage | IHandleOption;
+type THandleOption = string | IHandleOption;
 
 // 构造请求装饰器
 const buildHttpDecorator = (
@@ -65,7 +64,7 @@ const buildHttpDecorator = (
  * @example @HttpProcessor.error('error message', 500)
  */
 export const error = (
-  message: TMessage,
+  message: string,
   statusCode?: HttpStatus,
 ): MethodDecorator => {
   return buildHttpDecorator({ errorMessage: message, errorCode: statusCode });
@@ -78,7 +77,7 @@ export const error = (
  * @example @HttpProcessor.success('success message', 200)
  */
 export const success = (
-  message: TMessage,
+  message: string,
   statusCode?: HttpStatus,
 ): MethodDecorator => {
   return buildHttpDecorator({
@@ -106,9 +105,9 @@ export function handle(...args) {
   const option = args[0];
   const isOption = (value: THandleOption): value is IHandleOption =>
     value instanceof Object;
-  const message: TMessage = isOption(option) ? option.message : option;
-  const errorMessage: TMessage = message + TEXT.HTTP_ERROR_SUFFIX;
-  const successMessage: TMessage = message + TEXT.HTTP_SUCCESS_SUFFIX;
+  const message: string = isOption(option) ? option.message : option;
+  const errorMessage: string = message + TEXT.HTTP_ERROR_SUFFIX;
+  const successMessage: string = message + TEXT.HTTP_SUCCESS_SUFFIX;
   const errorCode: HttpStatus = isOption(option) ? option.error : null;
   const successCode: HttpStatus = isOption(option) ? option.success : null;
   const isPagination: boolean = isOption(option) ? option.isPagination : null;

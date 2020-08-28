@@ -1,10 +1,10 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { LoggingInterceptor } from './interceptors/logger.interceptor';
 import { AllExceptionsFilter } from './filters/all-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { ValidationPipe } from './pipes/validation.pipe';
+import { environment } from './app.environment';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger: false });
@@ -18,9 +18,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(
     new TransformInterceptor(new Reflector(), nestWinston.logger),
     new ErrorInterceptor(new Reflector()),
-    // new LoggingInterceptor(nestWinston.logger)
   );
   await app.listen(3000);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  console.log(`Application is running on: ${await app.getUrl()} env: ${environment}`);
 }
 bootstrap();

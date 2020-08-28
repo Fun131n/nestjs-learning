@@ -13,12 +13,10 @@ import {
 import { Logger } from 'winston';
 import {
   TExceptionOption,
-  TMessage,
   THttpErrorResponse,
-  EHttpStatus,
 } from '@app/interfaces/http.interface';
 import { isDevMode } from '@app/app.environment';
-
+import * as TEXT from '@app/common/constants/text.constant';
 /**
  * @class AllExceptionsFilter
  * @classdesc 拦截全局抛出的所有异常，同时任何异常都将规范化输出 THTTPErrorResponse
@@ -30,28 +28,24 @@ export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const request = host.switchToHttp().getRequest();
     const response = host.switchToHttp().getResponse();
-    const status = exception.getStatus() || HttpStatus.INTERNAL_SERVER_ERROR;
+    const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
     const errorOption: TExceptionOption = exception.getResponse() as TExceptionOption;
-    const isString = (value): value is TMessage => value instanceof String;
-    const errMessage = isString(errorOption)
-      ? errorOption
-      : errorOption.message;
-    const errorInfo = isString(errorOption) ? null : errorOption.error;
-    const parentErrorInfo = errorInfo ? String(errorInfo) : null;
-    const isChildrenError = errorInfo && errorInfo.status && errorInfo.message;
-    const resultError =
-      (isChildrenError && errorInfo.message) || parentErrorInfo;
-    const resultStatus = isChildrenError ? errorInfo.status : status;
+    const errMessage = errorOption.message;
+    const errInfo = errorOption.error;
     const body = request.body ? JSON.stringify(request.body) : '{}';
     const data: THttpErrorResponse = {
       statusCode: status,
       message: errMessage,
-      error: resultError,
-      debug: isDevMode ? exception.stack : null,
+      error: errInfo,
+      // debug: isDevMode ? exception.stack : null,
     };
     if (status === HttpStatus.NOT_FOUND) {
-      data.message = `资源不存在`;
-      data.error = `接口 ${request.method} -> ${request.url} 无效`;
+      if (data.error == 'Not Found') {
+        // 区分是由于资源不存在的404还是接口地址错误的404
+        // 疑问：是否有必要区分
+        data.message = TEXT.NOTFOUND_ERROR_DEFAULT;
+        data.error = `接口 ${request.method} -> ${request.url} 无效`;
+      }
     }
     const errorLog =
       '\n收到请求：' +
@@ -64,6 +58,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
       JSON.stringify(data);
     this.logger.error(errorLog);
     const { debug, ...responseData } = data;
-    return response.status(resultStatus).jsonp(responseData);
+    return response.status(status).json(responseData);
   }
 }

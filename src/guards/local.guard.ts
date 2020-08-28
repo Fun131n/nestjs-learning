@@ -1,6 +1,6 @@
 import { Injectable, ExecutionContext } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { HttpBadRequestError } from "@app/common/error/bad-request.error";
+import { ValidationError } from "@app/common/error/validation.error";
 
 @Injectable()
 export class LocalGuard extends AuthGuard('local') {
@@ -20,7 +20,7 @@ export class LocalGuard extends AuthGuard('local') {
     if (user && !error && !errorInfo) {
       return user;
     } else {
-      throw error || new HttpBadRequestError(errorMsg);
+      throw error || new ValidationError(errorMsg);
     }
   } 
 }

@@ -1,23 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Auth, Login } from './auth.model';
-import { InjectModel } from '@app/transformers/model.transformer';
-import { MongooseModel } from '@app/interfaces/mongoose.interface';
+import { Login } from './auth.model';
 import { encodeBcrypt, decodeBcrypt } from '@app/transformers/decode.transformer';
-import { HttpBadRequestError } from '@app/common/error/bad-request.error';
+import { ValidationError } from '@app/common/error/validation.error';
+import { UsersService } from '../users/users.service';
+
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(Auth) 
-    private readonly authModel: MongooseModel<Auth>,
     private readonly jwtService: JwtService,
+    private readonly usersService: UsersService,
   ) {}
 
-  async signIn(login: Login) {
+  async login(login: Login) {
     const user = await this.validateUser(login.username, login.password);
     if (!user) {
-      throw new HttpBadRequestError('账号密码错误');
+      throw new ValidationError('账号或密码错误');
     }
     const payload = { nickname: user.nickname };
     return {
@@ -25,26 +24,11 @@ export class AuthService {
     };
   }
 
-  async signUp(auth: Auth): Promise<Auth> {
-    auth.password = encodeBcrypt(auth.password)
-    const action = this.authModel.create(auth);
-    return action.then(data => {
-      data = data.toObject();
-      Reflect.deleteProperty(data, 'password');
-      return data;
-    });
-  }
-
   async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.authModel.findOne({username}).exec()
+    const user = await this.usersService.findOne(username)
     if (user && await decodeBcrypt(password, user.password)) {
       const { password, ...result } = user;
       return result;
     }
-  }
-
-  async validateJwtData(payload) {
-    // 返回字段 排除password
-    return await this.authModel.findOne(payload.nickname, { password: 0 })
   }
 }

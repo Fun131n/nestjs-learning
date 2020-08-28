@@ -3,47 +3,40 @@
  * @file HTTP 响应接口模型
  */
 
-// 响应状态
-export enum EHttpStatus {
-  Success = 200,
-  Error = 0,
-}
-
-export type TMessage = string;
-export type TExceptionOption =
-  | TMessage
-  | {
-      message: TMessage;
-      error?: any;
-    };
-
-// HTTP状态返回基础接口
-export interface IHttpResponseBase {
-  statusCode: EHttpStatus;
-  message: TMessage;
-}
+export type TExceptionOption = { message: string; error?: any};
 
 // HTTP基础接口返回分页接口
 export interface IHttpResultPaginate<T> {
-  data: T;
+  items: T;
   pagination: {
     total: number;
     page: number;
     limit: number;
-    // total_page: number,
   };
 }
 
 // HTTP 返回
 export type THttpResponse<T> = THttpErrorResponse | THttpSuccessResponse<T>;
 
-// HTTP Success
-export type THttpSuccessResponse<T> = IHttpResponseBase & {
-  result: T | IHttpResultPaginate<T>;
-};
+ 
+/**
+ * HTTP Success
+ * 成功则直接返回数据，不另外封装一层结构
+ * 分为普通数据和带分页的数据
+ */
+export type THttpSuccessResponse<T> = T | IHttpResultPaginate<T>;
 
-// HTTP Error
-export type THttpErrorResponse = IHttpResponseBase & {
+/**
+ * HTTP Error
+
+ * statusCode: 错误码
+ * message: 错误信息常量
+ * error: 具体错误信息
+ * debug: 栈追踪
+ */
+export type THttpErrorResponse = {
+  statusCode: number;
+  message: string;
   error: any;
   debug?: string;
 };

@@ -10,17 +10,14 @@ import {
 } from '@nestjs/common';
 import {
   THttpSuccessResponse,
-  TMessage,
-  EHttpStatus,
   IHttpResultPaginate,
 } from '../interfaces/http.interface';
-import { PaginateResult } from 'mongoose';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import * as TEXT from '../common/constants/text.constant';
 import * as META from '../common/constants/meta.constant';
 import { Logger } from 'winston';
+import { PaginateResult } from 'mongoose';
 
 /**
  * @class TransformInterceptor
@@ -29,58 +26,34 @@ import { Logger } from 'winston';
 @Injectable()
 export class TransformInterceptor<T>
   implements NestInterceptor<T, THttpSuccessResponse<T>> {
-  constructor(
-    private readonly reflector: Reflector,
-    private readonly logger: Logger,
-  ) {}
+  constructor(private readonly reflector: Reflector, private readonly logger: Logger) {}
 
-  intercept(
-    context: ExecutionContext,
-    next: CallHandler<T>,
-  ): Observable<THttpSuccessResponse<T>> {
+  intercept(context: ExecutionContext, next: CallHandler<T>): Observable<THttpSuccessResponse<T>> {
     const call$ = next.handle();
     const target = context.getHandler();
     const request = context.switchToHttp().getRequest();
     const content = request.method + ' -> ' + request.url;
     const body = request.body ? JSON.stringify(request.body) : '{}';
-    const message =
-      this.reflector.get<TMessage>(META.HTTP_SUCCESS_MESSAGE, target) ||
-      TEXT.HTTP_DEFAULT_SUCCESS_TEXT;
-    const isPagination = this.reflector.get<boolean>(
-      META.HTTP_RES_TRANSFORM_PAGINATE,
-      target,
-    );
+    const isPagination = this.reflector.get<boolean>(META.HTTP_RES_TRANSFORM_PAGINATE, target);
     const now = Date.now();
     return call$.pipe(
       map((data: any) => {
-        const result = isPagination ? transformDataToPaginate<T>(data) : data || null;
-        const transformResult = {
-          statusCode: EHttpStatus.Success,
-          message,
-          result,
-        };
-        this.logger.info(
-          `\n收到请求：${content} \n请求参数：${body} \n响应内容：${JSON.stringify(
-            transformResult,
-          )} \n耗时：${Date.now() - now}ms`,
-        );
-        return transformResult;
+        const finalData = isPagination ? transformDataToPaginate<T>(data) : data;
+        this.logger.info(`\n收到请求：${content} \n请求参数：${body} \n响应内容：${JSON.stringify(finalData,)} \n耗时：${Date.now() - now}ms`);
+        return finalData;
       }),
     );
   }
 }
 
-// 分页数据转标准数据
-export function transformDataToPaginate<T>(
-  data: PaginateResult<T>,
-): IHttpResultPaginate<T[]> {
+//分页返回数据再封装
+export function transformDataToPaginate<T>(data: PaginateResult<T>): IHttpResultPaginate<T[]> {
   return {
-    data: data.docs,
+    items: data.docs,
     pagination: {
       total: data.total,
       page: data.page,
       limit: data.limit,
-      // total_page: data.pages,
-    },
+    }
   };
 }

@@ -9,6 +9,7 @@ import { TExceptionOption } from '../../interfaces/http.interface';
 /**
  * @class CustomError
  * @classdesc 默认 500 -> 服务端出错
+ * 返回内部错误，让响应继续执行
  * @example new CustomError({ message: '错误信息' }, 400)
  * @example new CustomError({ message: '错误信息', error: new Error(xxx) })
  */
