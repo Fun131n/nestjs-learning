@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { Logger } from 'winston';
 import {
+  TExceptionMessage,
   TExceptionOption,
   THttpErrorResponse,
 } from '@app/interfaces/http.interface';
@@ -29,9 +30,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const request = host.switchToHttp().getRequest();
     const response = host.switchToHttp().getResponse();
     const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-    const errorOption: TExceptionOption = exception.getResponse() as TExceptionOption;
-    const errMessage = errorOption.message;
-    const errInfo = errorOption.error;
+    const errorOption: TExceptionOption = exception instanceof HttpException ? exception.getResponse() as TExceptionOption : exception;
+    const isString = (value): value is TExceptionMessage => value instanceof String;
+    const errMessage = isString(errorOption) ? errorOption : errorOption.message;
+    const errInfo =isString(errorOption) ? null : errorOption.error;
     const body = request.body ? JSON.stringify(request.body) : '{}';
     const data: THttpErrorResponse = {
       statusCode: status,
@@ -46,6 +48,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
         data.message = TEXT.NOTFOUND_ERROR_DEFAULT;
         data.error = `接口 ${request.method} -> ${request.url} 无效`;
       }
+    }
+    // 处理一些代码层面错误，返回500
+    if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
+        data.message = TEXT.INTERNAL_ERROR_DEFAULT;
     }
     const errorLog =
       '\n收到请求：' +

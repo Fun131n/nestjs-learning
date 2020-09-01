@@ -11,6 +11,6 @@ export class User extends BaseModel {
   @prop()
   nickname: string;
 
-  @prop()
+  @prop({ select: false })
   password: string;
 }

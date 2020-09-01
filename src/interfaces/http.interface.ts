@@ -2,8 +2,8 @@
  * HTTP interface
  * @file HTTP 响应接口模型
  */
-
-export type TExceptionOption = { message: string; error?: any};
+export type TExceptionMessage = string
+export type TExceptionOption = TExceptionMessage | { message: string; error?: any};
 
 // HTTP基础接口返回分页接口
 export interface IHttpResultPaginate<T> {
