@@ -6,10 +6,14 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.model';
 import { PaginateResult } from 'mongoose';
 import { HttpProcessor } from '@app/decorators/http.decorator';
+import { EmailService } from '@app/processors/helper/email.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService){}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly emailService: EmailService  
+  ){}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -18,7 +22,7 @@ export class UsersController {
 
   @Get(':username')
   async findOne(@Param('username') username) {
-    return this.usersService.findOne(username)
+    return this.usersService.findOne(username);
   }
 
   @Get()

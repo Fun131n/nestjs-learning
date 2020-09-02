@@ -10,7 +10,16 @@ export class User extends BaseModel {
 
   @prop()
   nickname: string;
-
+  
   @prop({ select: false })
   password: string;
+
+  @prop()
+  avatar?: string;
+
+  @prop()
+  email: string;
+
+  @prop({ default: false })
+  email_valid?: boolean;
 }
