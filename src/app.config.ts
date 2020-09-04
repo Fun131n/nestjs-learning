@@ -10,6 +10,12 @@ export const MONGODB = {
   uri: 'mongodb://127.0.0.1:27017/nest',
 }
 
+export const REDIS = {
+  host: '127.0.0.1',
+  port: 6379,
+  ttl: null,
+}
+
 export const EMAIL = {
   account: 'j4public@163.com',
   password: 'QFQXZANZWJHNISGU', //授权密码

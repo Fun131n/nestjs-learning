@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Login } from './auth.model';
 import { encodeBcrypt, decodeBcrypt } from '@app/transformers/decode.transformer';
 import { ValidationError } from '@app/common/error/validation.error';
 import { UsersService } from '../users/users.service';
+import { LoginDto } from './dto/login.dto';
 
 
 @Injectable()
@@ -13,8 +13,8 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
-  async login(login: Login) {
-    const user = await this.validateUser(login.username, login.password);
+  async login(LoginDto: LoginDto) {
+    const user = await this.validateUser(LoginDto.username, LoginDto.password);
     if (!user) {
       throw new ValidationError('账号或密码错误');
     }

@@ -18,13 +18,14 @@ import {
 } from '@app/interfaces/http.interface';
 import { isDevMode } from '@app/app.environment';
 import * as TEXT from '@app/common/constants/text.constant';
+import { ExtLoggerService } from '@app/processors/helper/logger.service';
 /**
  * @class AllExceptionsFilter
  * @classdesc 拦截全局抛出的所有异常，同时任何异常都将规范化输出 THTTPErrorResponse
  */
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  constructor(private readonly logger: Logger) {}
+  constructor(private readonly logger: ExtLoggerService) {}
 
   catch(exception: HttpException, host: ArgumentsHost) {
     const request = host.switchToHttp().getRequest();

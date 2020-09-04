@@ -1,7 +1,4 @@
-import { MinLength, MaxLength } from "class-validator";
+import { OmitType } from "@nestjs/swagger";
+import { CreateUserDto } from "./create-user.dto";
 
-export class UpdateUserDto {
-  @MinLength(2)
-  @MaxLength(10)
-  nickname?: string;
-}
+export class UpdateUserDto extends OmitType(CreateUserDto, ['username' ] as const) {}

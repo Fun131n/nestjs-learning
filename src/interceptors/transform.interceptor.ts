@@ -16,8 +16,8 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as META from '../common/constants/meta.constant';
-import { Logger } from 'winston';
 import { PaginateResult } from 'mongoose';
+import { ExtLoggerService } from '@app/processors/helper/logger.service';
 
 /**
  * @class TransformInterceptor
@@ -26,7 +26,7 @@ import { PaginateResult } from 'mongoose';
 @Injectable()
 export class TransformInterceptor<T>
   implements NestInterceptor<T, THttpSuccessResponse<T>> {
-  constructor(private readonly reflector: Reflector, private readonly logger: Logger) {}
+  constructor(private readonly reflector: Reflector, private readonly logger: ExtLoggerService) {}
 
   intercept(context: ExecutionContext, next: CallHandler<T>): Observable<THttpSuccessResponse<T>> {
     const call$ = next.handle();
@@ -39,7 +39,7 @@ export class TransformInterceptor<T>
     return call$.pipe(
       map((data: any) => {
         const finalData = isPagination ? transformDataToPaginate<T>(data) : data;
-        this.logger.info(`\n收到请求：${content} \n请求参数：${body} \n响应内容：${JSON.stringify(finalData,)} \n耗时：${Date.now() - now}ms`);
+        this.logger.log(`\n收到请求：${content} \n请求参数：${body} \n响应内容：${JSON.stringify(finalData,)} \n耗时：${Date.now() - now}ms`);
         return finalData;
       }),
     );

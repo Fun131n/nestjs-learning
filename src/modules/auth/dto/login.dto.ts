@@ -4,7 +4,7 @@
 
 import { IsNotEmpty } from "class-validator";
 
-export class Login {
+export class LoginDto {
   @IsNotEmpty({message: '缺少参数username'})
   username: string;
 

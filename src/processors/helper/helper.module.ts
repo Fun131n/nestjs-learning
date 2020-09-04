@@ -4,9 +4,11 @@
 
 import { EmailService } from "./email.service";
 import { Global, Module } from "@nestjs/common";
+import { ExtLoggerService } from "./logger.service";
 
 const services = [
-  EmailService
+  EmailService,
+  ExtLoggerService
 ]
 
 @Global()

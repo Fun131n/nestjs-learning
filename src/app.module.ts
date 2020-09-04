@@ -11,18 +11,20 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { TypegooseModule } from "nestjs-typegoose";
 import { HelperModule } from './processors/helper/helper.module';
+import { CacheModule } from './processors/cache/cache.module';
 
 @Module({
 
   imports: [
-    WinstonModule.forRoot(new WinstonConfig()),
+    // WinstonModule.forRoot(new WinstonConfig()),
+    HelperModule,
+    CacheModule,
     TypegooseModule.forRoot("mongodb://localhost:27017/nest", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }),
     AuthModule,
     UsersModule,
-    HelperModule
-  ],
+  ]
 })
 export class AppModule {}
