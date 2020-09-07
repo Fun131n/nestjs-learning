@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Put, UseGuards, Get, Param, Query } from '@nestjs/common';
+import { Controller, Post, Body, Put, UseGuards, Get, Request, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtGuard } from '@app/guards/jwt.guard';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,14 +21,7 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    this.usersService.create(createUserDto).then(() => {
-      this.cacheService.set(CACHE_KEY.EMAIL_VALID, '123456');
-    });
-  }
-
-  @Get(':username')
-  async findOne(@Param('username') username) {
-    return this.usersService.findOne(username);
+    return this.usersService.create(createUserDto);
   }
 
   @Get()
@@ -37,10 +30,10 @@ export class UsersController {
     return this.usersService.findAll(query);
   }
 
-  @Put(':id') 
+  @Put() 
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
-  async update(@Param('id') id, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  async update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(req.user._id, updateUserDto);
   }
 }

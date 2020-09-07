@@ -6,9 +6,6 @@ import mongoosePaginate from 'mongoose-paginate'
 export class User extends BaseModel {
 
   @prop()
-  username: string;
-
-  @prop()
   nickname: string;
   
   @prop({ select: false })
@@ -20,6 +17,6 @@ export class User extends BaseModel {
   @prop()
   email: string;
 
-  @prop({ default: false })
-  email_valid?: boolean;
+  // @prop({ default: false })
+  // email_valid?: boolean;
 }

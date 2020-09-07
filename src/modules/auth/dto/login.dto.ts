@@ -5,8 +5,8 @@
 import { IsNotEmpty } from "class-validator";
 
 export class LoginDto {
-  @IsNotEmpty({message: '缺少参数username'})
-  username: string;
+  @IsNotEmpty({message: '缺少参数email'})
+  email: string;
 
   @IsNotEmpty({message: '缺少参数password'})
   password: string;

@@ -1,5 +1,5 @@
 import { encodeBcrypt, decodeBcrypt } from '@app/transformers/decode.transformer';
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { NotFoundError } from '@app/common/error/not-found.error';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,39 +14,44 @@ import { MongooseModel } from '@app/interfaces/mongoose.interface';
 export class UsersService {
   constructor(@InjectModel(User) private readonly userModel: MongooseModel<User>){}
   
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto){
     createUserDto.password = encodeBcrypt(createUserDto.password)
-    // const user = new User();
-    // user.nickname = createUserDto.nickname;
-    // user.username = createUserDto.username;
-    // user.password = createUserDto.password;
-    // const createdUser = new this.userModel(createUserDto);
-    // return createdUser.save();
-    return await this.userModel.create(createUserDto);
+    const userByNickname = await this.findOneByNickname(createUserDto.nickname);
+    const userByEmail = await this.findOneByEmail(createUserDto.email);
+    if (userByNickname) {
+      throw new ConflictError('昵称已存在');
+    }else if (userByEmail) {
+      throw new ConflictError('邮箱已被注册');
+    } 
+    const user = await this.userModel.create(createUserDto);
+    return { _id: user.id};
   }
 
-  async findOne(username) {
-    const user = await this.userModel.findOne({username})
-    if (!user) {
-      throw new NotFoundError('未找到资源');
-    }
-    return user;
+  async findOneByEmail(email) {
+    return await this.userModel.findOne({email}).select("password");
   }
 
   async findAll(querys): Promise<PaginateResult<User>> {
     return this.userModel.paginate(querys);
   }
 
+  async findOneByNickname(nickname) {
+    return await this.userModel.findOne({nickname});
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto) {
-    // 查找重复昵称
-    const user = await this.userModel.find({
-      nickname: { $eq: updateUserDto.nickname },
-      _id: { $ne: id}
-    });
-    console.log('Log: UsersService -> update -> user', user);
-    if (user.length > 0) {
+    if (updateUserDto.nickname && await this.isNicknameExist(id, updateUserDto.nickname)) {
       throw new ConflictError('昵称已存在');
     }
     return await this.userModel.updateOne({ _id: id }, updateUserDto);
+  }
+
+   // 查找重复昵称
+  async isNicknameExist(id: string, nickname: string) {
+    const user = await this.userModel.find({
+      nickname: { $eq: nickname },
+      _id: { $ne: id}
+    });
+    return user.length > 0 ? true : false;
   }
 }

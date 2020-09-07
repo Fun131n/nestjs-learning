@@ -32,6 +32,7 @@ export class TransformInterceptor<T>
     const call$ = next.handle();
     const target = context.getHandler();
     const request = context.switchToHttp().getRequest();
+    const response = context.switchToHttp().getResponse();
     const content = request.method + ' -> ' + request.url;
     const body = request.body ? JSON.stringify(request.body) : '{}';
     const isPagination = this.reflector.get<boolean>(META.HTTP_RES_TRANSFORM_PAGINATE, target);
@@ -39,7 +40,7 @@ export class TransformInterceptor<T>
     return call$.pipe(
       map((data: any) => {
         const finalData = isPagination ? transformDataToPaginate<T>(data) : data;
-        this.logger.log(`\n收到请求：${content} \n请求参数：${body} \n响应内容：${JSON.stringify(finalData,)} \n耗时：${Date.now() - now}ms`);
+        this.logger.log(`\n收到请求：${content} \n请求体：${body} \n响应状态：${response.statusCode} \n响应内容：${JSON.stringify(finalData)} \n耗时：${Date.now() - now}ms`);
         return finalData;
       }),
     );

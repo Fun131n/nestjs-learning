@@ -59,8 +59,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
       request.method +
       ' -> ' +
       request.url +
-      '\n请求参数：' +
+      '\n请求体：' +
       JSON.stringify(body) +
+      '\n响应状态：' +
+      status +
       '\n响应内容：' +
       JSON.stringify(data);
     this.logger.error(errorLog);

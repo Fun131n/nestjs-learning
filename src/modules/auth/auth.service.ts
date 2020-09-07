@@ -14,21 +14,20 @@ export class AuthService {
   ) {}
 
   async login(LoginDto: LoginDto) {
-    const user = await this.validateUser(LoginDto.username, LoginDto.password);
+    const user = await this.validateUser(LoginDto.email, LoginDto.password);
     if (!user) {
       throw new ValidationError('账号或密码错误');
     }
-    const payload = { nickname: user.nickname };
+    const payload = { sub: user._id};
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
 
-  async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.usersService.findOne(username)
+  async validateUser(email: string, password: string) {
+    const user = await this.usersService.findOneByEmail(email);
     if (user && await decodeBcrypt(password, user.password)) {
-      const { password, ...result } = user;
-      return result;
+      return user;
     }
   }
 }
