@@ -20,10 +20,9 @@ export class Topic extends BaseModel {
 
   // 查看次数
   @prop({ default: 0 })
-  views: string;
+  views: number;
 
   // 评论数
   @prop({ default: 0 })
-  comments: string;
-
+  comments: number;
 }

@@ -3,7 +3,7 @@ import { Injectable, ConflictException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { NotFoundError } from '@app/common/error/not-found.error';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './user.model';
+import { User, setUserDefault } from './user.model';
 import { InjectModel } from 'nestjs-typegoose';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { ConflictError } from '@app/common/error/conflict.error';
@@ -23,7 +23,8 @@ export class UsersService {
     }else if (userByEmail) {
       throw new ConflictError('邮箱已被注册');
     } 
-    const user = await this.userModel.create(createUserDto);
+
+    const user = await this.userModel.create({ ...createUserDto, ...setUserDefault()});
     return { _id: user.id};
   }
 
