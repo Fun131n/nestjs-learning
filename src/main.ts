@@ -3,12 +3,13 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './filters/all-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
-import { ValidationPipe } from './pipes/validation.pipe';
 import { environment } from './app.environment';
 import { WinstonModule } from 'nest-winston';
 import { WinstonConfig } from './common/config/winston.config';
 import { ExtLoggerService } from './processors/helper/logger.service';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
+import { ValidationOptions } from './pipes/validation.pipe.options';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -26,11 +27,11 @@ async function bootstrap() {
 
   //添加异常过滤器
   app.useGlobalFilters(new AllExceptionsFilter(new ExtLoggerService()));
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe(new ValidationOptions()));
   //添加拦截器
   app.useGlobalInterceptors(
     new TransformInterceptor(new Reflector(), new ExtLoggerService()),
-    new ErrorInterceptor(new Reflector()),
+    // new ErrorInterceptor(new Reflector()),
   );
   await app.listen(3000);
   console.log(`Application is running on: ${await app.getUrl()} env: ${environment}`);

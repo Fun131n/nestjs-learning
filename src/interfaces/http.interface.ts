@@ -38,5 +38,5 @@ export type THttpErrorResponse = {
   statusCode: number;
   message: string;
   error: any;
-  debug?: string;
+  debug?: string | object;
 };

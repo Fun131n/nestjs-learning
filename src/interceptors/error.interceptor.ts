@@ -33,7 +33,7 @@ export class ErrorInterceptor implements NestInterceptor {
         statusCode = error.getStatus();
         error = error.getResponse();
       }else {
-        error.message = TEXT.INTERNAL_ERROR_DEFAULT;
+        // error.message = TEXT.INTERNAL_ERROR_DEFAULT;
       }
       return throwError(new CustomError(error, statusCode))
       })

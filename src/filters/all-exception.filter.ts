@@ -40,7 +40,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       statusCode: status,
       message: errMessage,
       error: errInfo,
-      // debug: isDevMode ? exception.stack : null,
+      debug: isDevMode ? exception.stack : null,
     };
     if (status === HttpStatus.NOT_FOUND) {
       if (data.error == 'Not Found') {

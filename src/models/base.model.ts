@@ -1,5 +1,6 @@
-import { modelOptions } from "@typegoose/typegoose";
+import { modelOptions, prop } from "@typegoose/typegoose";
 import dayjs from 'dayjs'
+import { Types } from "mongoose";
 
 /**
  * 数据模型默认添加以下时间戳
@@ -22,4 +23,6 @@ import dayjs from 'dayjs'
     }
   }
 })
-export class BaseModel {}
+export class BaseModel {
+  _id: Types.ObjectId;
+}

@@ -7,10 +7,11 @@ import { User } from './user.model';
 import { PaginateResult } from 'mongoose';
 import { HttpProcessor } from '@app/decorators/http.decorator';
 import { EmailService } from '@app/processors/helper/email.service';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CacheService } from '@app/processors/cache/cache.service';
 import * as CACHE_KEY from '@app/common/constants/cache.constant';
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(

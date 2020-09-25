@@ -12,7 +12,7 @@ import { UsersModule } from './modules/users/users.module';
 import { TypegooseModule } from "nestjs-typegoose";
 import { HelperModule } from './processors/helper/helper.module';
 import { CacheModule } from './processors/cache/cache.module';
-import { TopicsModule } from './modules/topics/topics.module';
+import { ArticlesModule } from './modules/articles/articles.module';
 
 @Module({
 
@@ -26,7 +26,7 @@ import { TopicsModule } from './modules/topics/topics.module';
     }),
     AuthModule,
     UsersModule,
-    TopicsModule
+    ArticlesModule
   ]
 })
 export class AppModule {}
