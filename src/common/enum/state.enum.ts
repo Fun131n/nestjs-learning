@@ -11,7 +11,8 @@ export enum EPublishState {
   Locked = 'locked'
 }
 
-// 公开状态
-export enum EPublicState {
-  
+// 排序状态
+export enum ESortType {
+  Asc = 'asc', // 升序
+  Desc = 'desc', // 降序
 }

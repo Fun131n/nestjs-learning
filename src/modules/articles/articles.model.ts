@@ -1,10 +1,9 @@
 import { BaseModel } from "@app/models/base.model";
 import { prop, plugin } from "@typegoose/typegoose";
-import { IsNotEmpty, IsInt } from "class-validator";
+import { IsNotEmpty } from "class-validator";
 import { EPublishState } from "@app/common/enum/state.enum";
 import mongoosePaginate from 'mongoose-paginate'
 import { ApiProperty } from "@nestjs/swagger";
-import { Base } from "@typegoose/typegoose/lib/defaultClasses";
 
 @plugin(mongoosePaginate)
 export class Article extends BaseModel {

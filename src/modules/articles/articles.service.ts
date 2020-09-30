@@ -15,8 +15,12 @@ export class ArticlesService {
     @InjectModel(User) private readonly userModel: MongooseModel<User>
   ) {}
 
-  async getAll(query): Promise<PaginateResult<Article>> {
-    return this.articleModel.paginate(query);
+  async getAll(query, options): Promise<PaginateResult<Article>> {
+    return this.articleModel.paginate(query, options);
+  }
+
+  async getOne(articleId) {
+    return this.articleModel.findOne({ _id: articleId});
   }
 
   async create(authorId: string, createArticleDto: CreateArticleDto) {
@@ -27,9 +31,9 @@ export class ArticlesService {
     return this.articleModel.updateOne({ author_id: authorId}, updateArticleDto)
   }
 
-  async delete(authorId: string, tid: string) {
+  async delete(authorId: string, articleId: string) {
     return this.articleModel.deleteOne({
-      _id: tid,
+      _id: articleId,
       author_id: authorId,
     })
   }
@@ -37,10 +41,10 @@ export class ArticlesService {
   /**
    * 收藏文章
    * @param userId 用户id
-   * @param tid 文章id
+   * @param articleId 文章id
    */
-  async favourite(userId: string, tid: string) {
-    let article = await this.articleModel.findOne({ _id: tid });
+  async favourite(userId: string, articleId: string) {
+    let article = await this.articleModel.findOne({ _id: articleId });
     const user = await this.userModel.findOne({ _id: userId });
     const isNewFavourite = user.favorites.findIndex(favourite => favourite._id.equals(article._id)) < 0;
     if (isNewFavourite) {
@@ -55,10 +59,10 @@ export class ArticlesService {
   /**
    * 取消收藏文章
    * @param userId 用户id
-   * @param tid 文章id
+   * @param articleId 文章id
    */
-  async unFavourite(userId: string, tid: string) {
-    let article = await this.articleModel.findOne({ _id: tid });
+  async unFavourite(userId: string, articleId: string) {
+    let article = await this.articleModel.findOne({ _id: articleId });
     const user = await this.userModel.findOne({ _id: userId });
     const favouriteIndex = user.favorites.findIndex(favourite => favourite._id.equals(article._id));
     if (favouriteIndex > -1) {

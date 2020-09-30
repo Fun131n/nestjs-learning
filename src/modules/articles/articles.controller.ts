@@ -7,6 +7,7 @@ import { CreateArticleDto } from "./dto/create-article.dto";
 import { JwtGuard } from "@app/guards/jwt.guard";
 import { UpdateArticleDto } from "./dto/update-article.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { QueryDecorator } from "@app/decorators/query.decorator";
 
 @ApiTags('articles')
 @Controller('articles')
@@ -18,8 +19,13 @@ export class ArticlesController {
 
   @Get()
   @HttpProcessor.paginate()
-  async getAll(@Query() query): Promise<PaginateResult<Article>>{
-    return await this.articlesService.getAll(query);
+  async getAll(@QueryDecorator() { query, options }): Promise<PaginateResult<Article>>{
+    return await this.articlesService.getAll(query, options);
+  }
+
+  @Get(':articleId')
+  async getOne(@Param('articleId') articleId) {
+    return await this.articlesService.getOne(articleId);
   }
 
   @Post()
@@ -29,31 +35,31 @@ export class ArticlesController {
     return await this.articlesService.create(req.user._id, createArticleDto);
   }
 
-  @Put(':tid')
+  @Put(':articleId')
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
   async update(@Request() req, @Body() updateArticleDto: UpdateArticleDto) {
     return await this.articlesService.update(req.user._id, updateArticleDto);
   }
 
-  @Delete(':tid')
+  @Delete(':articleId')
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
-  async delete(@Request() req, @Param('tid') tid) {
-    return await this.articlesService.delete(req.user._id, tid);
+  async delete(@Request() req, @Param('articleId') articleId) {
+    return await this.articlesService.delete(req.user._id, articleId);
   }
 
-  @Post(':tid/favourite') 
+  @Post(':articleId/favourite') 
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
-  async favourite(@Request() req, @Param('tid') tid) {
-    return await this.articlesService.favourite(req.user._id, tid);
+  async favourite(@Request() req, @Param('articleId') articleId) {
+    return await this.articlesService.favourite(req.user._id, articleId);
   }
 
-  @Delete(':tid/favourite') 
+  @Delete(':articleId/favourite') 
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
-  async unFavourite(@Request() req, @Param('tid') tid) {
-    return await this.articlesService.unFavourite(req.user._id, tid);
+  async unFavourite(@Request() req, @Param('articleId') articleId) {
+    return await this.articlesService.unFavourite(req.user._id, articleId);
   }
 }
