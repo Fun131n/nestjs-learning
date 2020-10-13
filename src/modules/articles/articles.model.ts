@@ -1,6 +1,6 @@
 import { BaseModel } from "@app/models/base.model";
 import { prop, plugin } from "@typegoose/typegoose";
-import { IsNotEmpty } from "class-validator";
+import { isNotEmpty, IsNotEmpty } from "class-validator";
 import { EPublishState } from "@app/common/enum/state.enum";
 import mongoosePaginate from 'mongoose-paginate'
 import { ApiProperty } from "@nestjs/swagger";
@@ -9,46 +9,96 @@ import { ApiProperty } from "@nestjs/swagger";
 export class Article extends BaseModel {
   
   @prop()
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: '标题不能为空',
+  })
   @ApiProperty({
-    description: '文章标题'
+    description: '标题'
   })
   title: string;
 
   @prop()
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: '描述不能为空',
+  })
   @ApiProperty({
-    description: '文章内容'
+    description: '描述'
   })
   content: string;
 
   @prop()
+  @IsNotEmpty()
   @ApiProperty({
-    description: '文章作者ID'
+    description: '房间密码'
+  })
+  password?: string;
+
+  @prop()
+  @IsNotEmpty({
+    message: '创建者的论点不能为空',
+  })
+  @ApiProperty({
+    description: '创建者论点'
+  })
+  author_viewpoint: string;
+
+  @prop()
+  @ApiProperty({
+    description: '创建者ID'
   })
   author_id: string;
+  
+  @prop({
+    default: [],
+    items: String
+  })
+  @ApiProperty({
+    description: '创建者论据'
+  })
+  author_arguments?: String[];
+
+  @prop()
+  @ApiProperty({
+    description: '参与者论点'
+  })
+  debater_viewpoint?: string;
+
+  @prop()
+  @ApiProperty({
+    description: '参与者ID'
+  })
+  debater_id?: string;
+  
+  @prop({
+    default: [],
+    items: String
+  })
+  @ApiProperty({
+    description: '参与者论据'
+  })
+  debater_arguments?: String[];
 
   @prop({ default: EPublishState.Pending})
   @ApiProperty({
-    description: '文章发布状态'
+    description: '发布状态'
   })
   state?: EPublishState;
 
   @prop({ default: 0 })
   @ApiProperty({
-    description: '文章被查看次数'
+    description: '被查看次数'
   })
   views_count?: number;
 
   @prop({ default: 0 })
   @ApiProperty({
-    description: '文章评论数'
+    description: '评论数'
   })
   comments_count?: number;
 
   @prop({ default: 0 })
   @ApiProperty({
-    description: '文章被收藏数'
+    description: '被收藏数'
   })
   favorites_count?: number;
 }

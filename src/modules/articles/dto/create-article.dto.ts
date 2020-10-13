@@ -3,5 +3,6 @@ import { Article } from "../articles.model";
 
 export class CreateArticleDto extends PickType(Article, [
   'title',
-  'content'
+  'content',
+  'author_viewpoint'
 ] as const) {}

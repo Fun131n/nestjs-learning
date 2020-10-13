@@ -11,7 +11,12 @@ export class ValidationOptions implements ValidationPipeOptions {
   // forbidNonWhitelisted 如果设置为true，验证器不会去掉非白名单的属性，而是会抛出异常
   // forbidNonWhitelisted = true
   exceptionFactory = (errors) => {
-    const errorMessage = errors.map(error => Object.values(error.constraints).join(';')).join(';');
+    // const errorMessage = errors.map(error => Object.values(error.constraints).join(';')).join(';');
+    const errorMessage = errors.map(error => {
+      return {
+        error_message: Object.values(error.constraints)[0]
+      }
+    });
     throw new ValidationError(errorMessage)
   }
 }

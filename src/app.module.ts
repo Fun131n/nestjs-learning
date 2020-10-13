@@ -14,6 +14,7 @@ import { HelperModule } from './processors/helper/helper.module';
 import { CacheModule } from './processors/cache/cache.module';
 import { ArticlesModule } from './modules/articles/articles.module';
 import { CommentsModule } from './modules/comments/comments.module';
+import { ReplysModule } from './modules/replys/replys.module';
 
 @Module({
 
@@ -28,7 +29,8 @@ import { CommentsModule } from './modules/comments/comments.module';
     AuthModule,
     UsersModule,
     ArticlesModule,
-    CommentsModule
+    CommentsModule,
+    ReplysModule
   ]
 })
 export class AppModule {}

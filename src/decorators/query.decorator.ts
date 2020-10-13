@@ -15,6 +15,8 @@ export interface IQueryConfig {
 export interface IQueryResult {
   query: IQueryConfig, // 用于 paginate 的查询参数
   options: IQueryConfig // 用于 paginate 的查询配置参数
+  params: IQueryConfig, // 路由参数
+  request: any, //request对象
 }
 
 
@@ -32,7 +34,7 @@ export const QueryDecorator = createParamDecorator((data: unknown, ctx: Executio
 
   const query: IQueryConfig = {};
   const options: IQueryConfig = {};
-
+  const params: IQueryConfig = request.params;
   // 拼接参数
   options.page = Math.floor(page);
   options.limit = Math.floor(limit);
@@ -45,7 +47,9 @@ export const QueryDecorator = createParamDecorator((data: unknown, ctx: Executio
   // 返回结果
   const result = {
     query,
-    options
+    options,
+    params,
+    request,
   }
 
   return result

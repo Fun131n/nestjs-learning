@@ -6,6 +6,20 @@ import { Types } from "mongoose";
 import mongoosePaginate from 'mongoose-paginate'
 import { User } from "../users/user.model";
 
+
+export interface Author {
+
+  _id: string;
+
+  nickname: string;
+
+  avatar?: string;
+
+  following_count?: number;
+
+  followers_count?: number;
+}
+
 @plugin(mongoosePaginate)
 export class Comment extends BaseModel {
 
@@ -31,10 +45,3 @@ export class Comment extends BaseModel {
   })
   author: Author
 }
-
-export class Author extends PickType(User, [
-  'nickname',
-  'avatar',
-  'followers_count',
-  'following_count'
-] as const) {}

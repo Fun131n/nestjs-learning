@@ -55,4 +55,8 @@ export class UsersService {
     });
     return user.length > 0 ? true : false;
   }
+
+  async findOneById(id) {
+    return await this.userModel.findOne({ _id: id});
+  }
 }
