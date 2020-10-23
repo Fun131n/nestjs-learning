@@ -1,3 +1,4 @@
+import { HttpProcessor } from '@app/decorators/http.decorator';
 import { QueryDecorator } from '@app/decorators/query.decorator';
 import { JwtGuard } from '@app/guards/jwt.guard';
 import { Controller, Post, UseGuards, Request, Body, Get } from '@nestjs/common';
@@ -14,8 +15,9 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService){}
 
   @Get(':articleId/comments')
-  getAllComment(@QueryDecorator() { query, options }): Promise<PaginateResult<Comment>>{
-    return this.commentsService.getAllComment(query, options);
+  @HttpProcessor.paginate()
+  getAllComment(@QueryDecorator() { params, query, options }): Promise<PaginateResult<Comment>>{
+    return this.commentsService.getAllComment(params, query, options);
   }
 
   @Post(':articleId/comments')

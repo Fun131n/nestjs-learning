@@ -1,11 +1,11 @@
 import { BaseModel } from "@app/models/base.model";
 import { Type } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
-import { Plugins, prop } from "@typegoose/typegoose";
+import { Plugins, prop, Ref } from "@typegoose/typegoose";
 import { IsNotEmpty } from "class-validator";
 import { Types } from "mongoose";
-import mongoosePaginate from 'mongoose-paginate'
-import { Author } from "../comments/comments.model";
+import mongoosePaginate from 'mongoose-paginate-v2'
+import { User } from "../users/user.model";
 
 @Plugins(mongoosePaginate)
 export class Reply extends BaseModel {
@@ -32,10 +32,10 @@ export class Reply extends BaseModel {
   })
   content: string;
 
-  @prop()
+  @prop({ ref: User})
   @IsNotEmpty()
   @ApiProperty({
     description: '评论作者'
   })
-  author: Author
+  author: Ref<User>
 }

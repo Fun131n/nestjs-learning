@@ -2,7 +2,7 @@ import { BaseModel } from "@app/models/base.model";
 import { prop, plugin } from "@typegoose/typegoose";
 import { isNotEmpty, IsNotEmpty } from "class-validator";
 import { EPublishState } from "@app/common/enum/state.enum";
-import mongoosePaginate from 'mongoose-paginate'
+import mongoosePaginate from 'mongoose-paginate-v2'
 import { ApiProperty } from "@nestjs/swagger";
 
 @plugin(mongoosePaginate)

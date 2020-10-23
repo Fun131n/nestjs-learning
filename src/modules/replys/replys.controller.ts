@@ -1,6 +1,6 @@
 import { QueryDecorator } from '@app/decorators/query.decorator';
 import { JwtGuard } from '@app/guards/jwt.guard';
-import { Controller, Post, UseGuards, Request, Body, Get } from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PaginateResult } from 'mongoose';
 import { CreateReplyDto } from './dto/create-reply.dto';

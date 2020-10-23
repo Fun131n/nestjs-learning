@@ -4,9 +4,10 @@ import { ReplysController } from './replys.controller';
 import { TypegooseModule } from 'nestjs-typegoose';
 import { Reply } from './replys.model';
 import { UsersModule } from '../users/users.module';
+import { Comment } from '../comments/comments.model';
 
 @Module({
-  imports: [UsersModule, TypegooseModule.forFeature([Reply])],
+  imports: [UsersModule, TypegooseModule.forFeature([Comment]), TypegooseModule.forFeature([Reply])],
   providers: [ReplysService],
   controllers: [ReplysController]
 })

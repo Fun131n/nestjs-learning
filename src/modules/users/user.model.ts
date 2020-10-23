@@ -1,6 +1,6 @@
 import { prop, plugin } from '@typegoose/typegoose';
 import { BaseModel } from 'models/base.model'
-import mongoosePaginate from 'mongoose-paginate'
+import mongoosePaginate from 'mongoose-paginate-v2'
 import { IsNotEmpty, MinLength, MaxLength, IsEmail, IsInt, IsDataURI } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Article } from '../articles/articles.model';

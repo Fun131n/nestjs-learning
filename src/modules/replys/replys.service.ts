@@ -2,7 +2,7 @@ import { MongooseModel } from '@app/interfaces/mongoose.interface';
 import { Injectable } from '@nestjs/common';
 import { PaginateResult } from 'mongoose';
 import { InjectModel } from 'nestjs-typegoose';
-import { Author } from '../comments/comments.model';
+import { Comment } from '../comments/comments.model';
 import { UsersService } from '../users/users.service';
 import { CreateReplyDto } from './dto/create-reply.dto';
 import { Reply } from './replys.model';
@@ -11,6 +11,7 @@ import { Reply } from './replys.model';
 export class ReplysService {
   constructor(
     @InjectModel(Reply) private readonly replyModel: MongooseModel<Reply>,
+    @InjectModel(Comment) private readonly commentModel: MongooseModel<Comment>,
     private readonly usersService: UsersService,
   ){}
 
@@ -22,21 +23,20 @@ export class ReplysService {
     return this.replyModel.paginate(query, options);
   }
 
-  async createReply(authorId, commentId, replyId, createReplyDto: CreateReplyDto) {
+  async createReply(authorId, commentId, replyToId, createReplyDto: CreateReplyDto) {
     const user = await this.usersService.findOneById(authorId);
-    const author: Author = {
-      _id: user._id,
-      nickname: user.nickname,
-      avatar: user.avatar,
-      followers_count: user.followers_count,
-      following_count: user.following_count
-    };
-    replyId ? null : replyId;
-    this.replyModel.create({
+    replyToId ? null : replyToId;
+    const reply = await this.replyModel.create({
       ...createReplyDto,
       comment_id: commentId,
-      reply_to_id: replyId,
-      author
+      reply_to_id: replyToId,
+      author: authorId
     });
+    const comment = await this.commentModel.findOne({ _id: commentId });
+    comment.replies.unshift(reply._id);
+    if (comment.replies.length > 3) {
+      comment.replies.pop();
+    }
+    this.commentModel.create(comment);
   }
 }

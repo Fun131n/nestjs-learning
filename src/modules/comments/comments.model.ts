@@ -1,24 +1,11 @@
 import { BaseModel } from "@app/models/base.model";
 import { ApiProperty, PickType } from "@nestjs/swagger";
-import { plugin, prop } from "@typegoose/typegoose";
-import { IsNotEmpty, IsString } from "class-validator";
+import { plugin, prop, Ref } from "@typegoose/typegoose";
+import { ArrayMaxSize, IsNotEmpty, IsString, MaxLength } from "class-validator";
 import { Types } from "mongoose";
-import mongoosePaginate from 'mongoose-paginate'
+import mongoosePaginate from 'mongoose-paginate-v2'
+import { Reply } from "../replys/replys.model";
 import { User } from "../users/user.model";
-
-
-export interface Author {
-
-  _id: string;
-
-  nickname: string;
-
-  avatar?: string;
-
-  following_count?: number;
-
-  followers_count?: number;
-}
 
 @plugin(mongoosePaginate)
 export class Comment extends BaseModel {
@@ -38,10 +25,13 @@ export class Comment extends BaseModel {
   })
   content: string
 
-  @prop()
+  @prop({ ref: User})
   @IsNotEmpty()
   @ApiProperty({
     description: '评论作者'
   })
-  author: Author
+  author: Ref<User>
+
+  @prop({ default: [], ref: Reply})
+  replies?: Ref<Reply>[]
 }
