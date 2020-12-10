@@ -1,9 +1,16 @@
-import { prop, plugin } from '@typegoose/typegoose';
+import { prop, plugin, Ref } from '@typegoose/typegoose';
 import { BaseModel } from 'models/base.model'
 import mongoosePaginate from 'mongoose-paginate-v2'
 import { IsNotEmpty, MinLength, MaxLength, IsEmail, IsInt, IsDataURI } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Article } from '../articles/articles.model';
+import { Types } from 'mongoose';
+
+class Like {
+  article_id?: Types.ObjectId;
+  comment_id?: Types.ObjectId;
+  reply_id?: Types.ObjectId;
+}
 
 @plugin(mongoosePaginate)
 export class User extends BaseModel {
@@ -34,39 +41,45 @@ export class User extends BaseModel {
   avatar?: string;
 
   @IsEmail()
-  @prop()
+  @prop({ select: false })
   @ApiProperty({
     description: '用户邮箱'
   })
   email: string;
 
-  @IsInt()
-  @prop({ default: 0 })
+  @prop({ default: [], ref: User })
   @ApiProperty({
-    description: '用户关注数'
+    description: '关注的用户'
   })
-  following_count?: number;
+  following?: Ref<User>[];
 
-  @IsInt()
-  @prop({ default: 0 })
+  @prop({ default: [], ref: User })
   @ApiProperty({
-    description: '用户被关注数'
+    description: '被关注的用户'
   })
-  followers_count?: number;
+  followers?: Ref<User>[];
 
-  @IsInt()
-  @prop({ default: 0 })
+  @prop({ default: [], ref: Article })
   @ApiProperty({
-    description: '用户话题数'
+    description: '用户创建的文章'
   })
-  contents_count?: number;
+  contents?: Ref<Article>[];
 
-  @ApiProperty({
-    description: '用户收藏的话题'
-  })
   @prop({
     default: [],
     items: Article
   })
+  @ApiProperty({
+    description: '用户收藏的文章'
+  })
   favorites?: Article[];
+
+  @prop({
+    default: [],
+    items: Like
+  })
+  @ApiProperty({
+    description: '用户点赞的文章/评论/回复'
+  })
+  likes?: Like[]
 }

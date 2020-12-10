@@ -20,16 +20,19 @@ export class ReplysService {
     query = {
       comment_id: { $eq: commentId}
     }
-    return this.replyModel.paginate(query, options);
+    return this.replyModel.paginate(query, { ...options, populate: ['reply_to_user', 'author'] });
   }
 
-  async createReply(authorId, commentId, replyToId, createReplyDto: CreateReplyDto) {
-    const user = await this.usersService.findOneById(authorId);
-    replyToId ? null : replyToId;
+  async createReply(authorId, commentId, replyToId = null, createReplyDto: CreateReplyDto) {
+    let replyToUser = null;
+    if (replyToId) {
+      replyToUser = (await this.replyModel.findOne({ _id: replyToId })).author;
+    }
     const reply = await this.replyModel.create({
       ...createReplyDto,
       comment_id: commentId,
       reply_to_id: replyToId,
+      reply_to_user: replyToUser,
       author: authorId
     });
     const comment = await this.commentModel.findOne({ _id: commentId });
@@ -38,5 +41,6 @@ export class ReplysService {
       comment.replies.pop();
     }
     this.commentModel.create(comment);
+    return reply; 
   }
 }

@@ -25,13 +25,22 @@ export class Comment extends BaseModel {
   })
   content: string
 
-  @prop({ ref: User})
+  @prop({ ref: User })
   @IsNotEmpty()
   @ApiProperty({
     description: '评论作者'
   })
   author: Ref<User>
 
-  @prop({ default: [], ref: Reply})
+  @prop()
+  @ApiProperty({
+    description: '点赞数'
+  })
+  likes_count?: number
+
+  @prop({ default: [], ref: Reply })
   replies?: Ref<Reply>[]
+
+  @prop()
+  is_like?: boolean;
 }

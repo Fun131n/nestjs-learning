@@ -1,9 +1,10 @@
 import { BaseModel } from "@app/models/base.model";
-import { prop, plugin } from "@typegoose/typegoose";
-import { isNotEmpty, IsNotEmpty } from "class-validator";
+import { prop, plugin, Ref } from "@typegoose/typegoose";
+import { IsNotEmpty } from "class-validator";
 import { EPublishState } from "@app/common/enum/state.enum";
 import mongoosePaginate from 'mongoose-paginate-v2'
 import { ApiProperty } from "@nestjs/swagger";
+import { User } from "../users/user.model";
 
 @plugin(mongoosePaginate)
 export class Article extends BaseModel {
@@ -42,11 +43,11 @@ export class Article extends BaseModel {
   })
   author_viewpoint: string;
 
-  @prop()
+  @prop({ ref: () => User })
   @ApiProperty({
-    description: '创建者ID'
+    description: '创建者'
   })
-  author_id: string;
+  author: Ref<User>;
   
   @prop({
     default: [],
@@ -63,11 +64,11 @@ export class Article extends BaseModel {
   })
   debater_viewpoint?: string;
 
-  @prop()
+  @prop({ ref: () => User })
   @ApiProperty({
-    description: '参与者ID'
+    description: '参与者'
   })
-  debater_id?: string;
+  debater?: Ref<User>;
   
   @prop({
     default: [],

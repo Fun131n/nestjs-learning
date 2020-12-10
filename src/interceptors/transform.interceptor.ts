@@ -52,7 +52,9 @@ export function transformDataToPaginate<T>(data: PaginateResult<T>): IHttpResult
   return {
     items: data.docs,
     pagination: {
-      total: data.totalDocs,
+      hasNextPage: data.hasNextPage,
+      totalItems: data.totalDocs,
+      totalPages: data.totalPages,
       page: data.page,
       limit: data.limit,
     }

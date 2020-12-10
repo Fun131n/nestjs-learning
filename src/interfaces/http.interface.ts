@@ -9,7 +9,9 @@ export type TExceptionOption = TExceptionMessage | { message: string; error?: an
 export interface IHttpResultPaginate<T> {
   items: T;
   pagination: {
-    total: number;
+    hasNextPage: boolean;
+    totalItems: number;
+    totalPages: number,
     page: number;
     limit: number;
   };

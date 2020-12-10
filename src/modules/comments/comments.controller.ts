@@ -23,6 +23,6 @@ export class CommentsController {
   @Post(':articleId/comments')
   @UseGuards(JwtGuard)
   createComment(@QueryDecorator() { params, request }, @Body() createCommentDto: CreateCommentDto) {
-    this.commentsService.createComment(request.user._id, params.articleId, createCommentDto);
+    return this.commentsService.createComment(request.user._id, params.articleId, createCommentDto);
   }
 }

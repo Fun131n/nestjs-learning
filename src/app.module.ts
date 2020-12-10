@@ -15,6 +15,7 @@ import { CacheModule } from './processors/cache/cache.module';
 import { ArticlesModule } from './modules/articles/articles.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { ReplysModule } from './modules/replys/replys.module';
+import { LikeModule } from './modules/like/like.module';
 
 @Module({
 
@@ -30,7 +31,8 @@ import { ReplysModule } from './modules/replys/replys.module';
     UsersModule,
     ArticlesModule,
     CommentsModule,
-    ReplysModule
+    ReplysModule,
+    LikeModule
   ]
 })
 export class AppModule {}

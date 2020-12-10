@@ -1,5 +1,4 @@
 import { BaseModel } from "@app/models/base.model";
-import { Type } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { Plugins, prop, Ref } from "@typegoose/typegoose";
 import { IsNotEmpty } from "class-validator";
@@ -21,9 +20,15 @@ export class Reply extends BaseModel {
     default: null
   })
   @ApiProperty({
-    description: '回复ID'
+    description: '回复对象的ID'
   })
   reply_to_id?: null | Types.ObjectId;
+
+  @prop({ ref: User})
+  @ApiProperty({
+    description: '回复对象'
+  })
+  reply_to_user?: Ref<User>
 
   @prop()
   @IsNotEmpty()

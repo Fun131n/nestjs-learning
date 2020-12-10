@@ -5,6 +5,7 @@ import { UsersService } from '../users/users.service';
 import { Comment } from './comments.model';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { PaginateResult } from "mongoose";
+import { User } from '../users/user.model';
 
 @Injectable()
 export class CommentsService {
@@ -19,19 +20,21 @@ export class CommentsService {
     query = {
       article_id: { $eq: articleId}
     }
-    return this.commentsModel.paginate(query, { 
+    let comments = await this.commentsModel.paginate(query, { 
       ...options, 
-      populate: [
-        { path: 'replies'},
-        { path: 'author', select: 'nickname'}
-      ]
-    });
+      populate: [{ path: 'replies', populate: ['reply_to_user', 'author'] }, { path: 'author' }]
+    })
+    comments.docs.forEach(item => {
+      return item.is_like = true;
+    })
+    console.log('Log: CommentsService -> comments', comments);
+    return comments;
   }
 
   async createComment(authorId, articleId, createCommentDto: CreateCommentDto) {
     // 根据authorId查出评论的作者
     const user = await this.usersService.findOneById(authorId);
-    this.commentsModel.create({
+    return this.commentsModel.create({
       ...createCommentDto,
       article_id: articleId,
       author: authorId

@@ -16,15 +16,15 @@ export class ArticlesService {
   ) {}
 
   async getAll(query, options): Promise<PaginateResult<Article>> {
-    return this.articleModel.paginate(query, options);
+    return this.articleModel.paginate(query, { ...options, populate: { path: 'author' }});
   }
 
   async getOne(articleId) {
-    return this.articleModel.findOne({ _id: articleId});
+    return this.articleModel.findOne({ _id: articleId}).populate('author');
   }
 
   async create(authorId: string, createArticleDto: CreateArticleDto) {
-    return this.articleModel.create({ ...createArticleDto, author_id: authorId });
+    return this.articleModel.create({ ...createArticleDto, author: authorId });
   }
 
   async update(authorId: string, updateArticleDto: UpdateArticleDto) {
